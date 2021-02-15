@@ -17,7 +17,7 @@ function ClassForm() {
     return (
         <form onSubmit={handleSubmit}>
             <br />
-            <input placeholder='New Class' value={store.newClass} onChange={e => dispatch({ type: 'SET_NEW_CLASS', payload: e.target.value })} required />
+            <input placeholder='New Class' value={store.newClass} onChange={e => dispatch({ type: 'SET_ADD_CLASS', payload: e.target.value })} required />
             <br />
             <br />
             <button type='submit'>Submit</button>

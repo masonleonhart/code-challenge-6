@@ -59,4 +59,17 @@ router.post('/classes', (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+    console.log(`Deleting animal at id: ${req.params.id}`);
+    const queryText = `DELETE FROM "species" WHERE "id" = $1;`;
+
+    pool.query(queryText, [req.params.id]).then(() => {
+        console.log(`Deleted animal at id: ${req.params.id} successfully`);
+        res.sendStatus(204);
+    }).catch(err => {
+        console.log('Error in delete', err);
+        res.sendStatus(500);
+    });
+});
+
 module.exports = router;

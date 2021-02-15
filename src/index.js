@@ -18,6 +18,7 @@ function* rootSaga() {
     yield takeEvery('ADD_ANIMAL', addZooAnimal);
     yield takeEvery('FETCH_CLASSES', fetchZooClasses);
     yield takeEvery('ADD_CLASS', addNewClass);
+    yield takeEvery('DELETE_ANIMAL', deleteAnimalSaga);
 }
 
 function* fetchZooAnimals() {
@@ -42,6 +43,7 @@ function* addZooAnimal(action) {
     try {
         yield axios.post('/zoo/animals', action.payload);
         yield put({ type: 'RESET_STATE' });
+        yield put({ type: 'GET_ZOO_ANIMALS' })
     } catch (error) {
         console.log('Error in adding animal');
     };
@@ -51,8 +53,18 @@ function* addNewClass(action) {
     try {
         yield axios.post('/zoo/classes', action.payload);
         yield put({ type: 'RESET_CLASS_REDUCER' });
+        yield put({ type: 'FETCH_CLASSES' });
     } catch (error) {
-        console.log('Error in adding animal');
+        console.log('Error in adding class', error);
+    }
+};
+
+function* deleteAnimalSaga(action) {
+    try {
+        yield axios.delete(`/zoo/${action.payload}`);
+        yield put({ type: 'GET_ZOO_ANIMALS' });
+    } catch (error) {
+        console.log('Error in deleteing animal', error);
     }
 };
 
@@ -98,8 +110,8 @@ const addAnimalReducer = (state = {name: '', class: 1}, action) => {
 const addClassReducer = (state = {newClass: ''}, action) => {
     let newState = {...state};
 
-    switch (action.payload) {
-        case 'SET_NEW_CLASS':
+    switch (action.type) {
+        case 'SET_ADD_CLASS':
             newState.newClass = action.payload;
             return newState;
         case 'RESET_CLASS_REDUCER':
